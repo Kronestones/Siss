@@ -189,6 +189,12 @@ def create_app():
 # ROUTES
 # ══════════════════════════════════════════════════════════════════════════════
 
+@app.route("/")
+def root():
+    from flask import redirect
+    return redirect("/sisters")
+
+
 @app.route("/sisters")
 def sisters_ui():
     """Serve the Sisters mobile UI."""
