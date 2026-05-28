@@ -31,7 +31,7 @@ import threading
 from datetime import datetime, timezone, timedelta
 from collections import defaultdict
 from functools import wraps
-from flask import Flask, jsonify, request, render_template_string
+from flask import Flask, jsonify, request, render_template, redirect
 
 from sisters_database import (
     init_db, get_session,
@@ -53,7 +53,7 @@ JWT_HOURS     = 24 * 7  # 7 days
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="templates")
 
 
 # ── Rate Limiting ─────────────────────────────────────────────────────────────
@@ -191,16 +191,13 @@ def create_app():
 
 @app.route("/")
 def root():
-    from flask import redirect
     return redirect("/sisters")
 
 
 @app.route("/sisters")
 def sisters_ui():
     """Serve the Sisters mobile UI."""
-    return render_template_string(open(
-        os.path.join(os.path.dirname(__file__), "sisters.html")
-    ).read())
+    return render_template("sisters.html")
 
 
 @app.route("/sisters/api/health")
