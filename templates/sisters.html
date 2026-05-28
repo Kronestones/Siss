@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+  <meta name="theme-color" content="#0e080f"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="description" content="Siss — Women protecting women."/>
+  <title>Siss</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:        #0e080f;
+      --bg2:       #160d18;
+      --bg3:       #1c1020;
+      --border:    #2a1a2e;
+      --border2:   #3a2040;
+      --muted:     #6a4870;
+      --text:      #e0c8e8;
+      --text-dim:  #a880b8;
+      --white:     #f5e8ff;
+      --gold:      #e060a0;
+      --gold2:     #f080c0;
+      --gold-dim:  #8a2060;
+      --gold-glow: rgba(220,80,160,.12);
+      --red:       #d44090;
+      --red-glow:  rgba(212,64,144,.22);
+      --green:     #a060e0;
+      --green-glow:rgba(160,96,224,.18);
+      --purple:    #c470e8;
+      --safe:      #7a30a0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: linear-gradient(135deg, #0e080f 0%, #120a1a 50%, #0e080f 100%);
+      color: var(--text);
+      font-family: 'Space Mono', monospace;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    /* ── PAGES ── */
+    .page { display: none; min-height: 100vh; flex-direction: column; }
+    .page.active { display: flex; }
+
+    /* ══════════════════════════════════════════════════════════
+       AUTH PAGE
+    ══════════════════════════════════════════════════════════ */
+    #page-auth {
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      gap: 0;
+    }
+
+    .auth-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 10px;
+      color: var(--gold);
+      text-align: center;
+      text-shadow: 0 0 40px rgba(220,80,160,.35), 0 0 80px rgba(160,96,224,.2);
+      margin-bottom: 6px;
+    }
+
+    .auth-sub {
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .auth-tabs {
+      display: flex;
+      width: 100%;
+      max-width: 340px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 10px;
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .auth-tab.active {
+      background: var(--gold-glow);
+      color: var(--gold);
+      border-bottom: 1px solid var(--gold);
+    }
+
+    .auth-form {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 340px;
+    }
+
+    .auth-form.active { display: flex; }
+
+    .auth-input {
+      width: 100%;
+      padding: 13px 14px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      color: var(--white);
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .auth-input:focus { border-color: #8a2060; box-shadow: 0 0 12px rgba(220,80,160,.1); }
+    .auth-input::placeholder { color: var(--muted); }
+
+    .auth-btn {
+      width: 100%;
+      padding: 14px;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: 'Cinzel', serif;
+      font-size: 12px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all .2s;
+      margin-top: 4px;
+    }
+
+    .auth-btn:hover { background: rgba(220,80,160,.1); box-shadow: 0 0 20px rgba(220,80,160,.15); }
+    .auth-btn:active { transform: scale(.98); }
+    .auth-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+    .auth-msg {
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-align: center;
+      min-height: 18px;
+      margin-top: 4px;
+    }
+
+    .auth-msg.error { color: var(--red); }
+    .auth-msg.success { color: var(--green); }
+
+    .auth-notice {
+      margin-top: 32px;
+      padding: 16px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      max-width: 340px;
+      width: 100%;
+    }
+
+    .auth-notice p {
+      font-size: 10px;
+      line-height: 1.8;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+    }
+
+
+    /* ══════════════════════════════════════════════════════════
+       MAIN APP PAGE
+    ══════════════════════════════════════════════════════════ */
+    #page-app {
+      flex-direction: column;
+      max-width: 500px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Header */
+    #app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 20px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    #app-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 6px;
+      color: var(--gold);
+    }
+
+    #app-user {
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    #logout-btn {
+      font-size: 9px;
+      letter-spacing: 1px;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Space Mono', monospace;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      border: 1px solid var(--border);
+      transition: all .2s;
+    }
+
+    #logout-btn:hover { border-color: var(--muted); color: var(--text); }
+
+    /* Network status bar */
+    #network-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .net-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--muted);
+    }
+
+    .net-dot.online { background: var(--green); box-shadow: 0 0 6px var(--green); }
+    .net-dot.locating { background: var(--gold); animation: blink 1.2s infinite; }
+    .net-dot.error { background: var(--red); }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .2; }
+    }
+
+    #net-label { color: var(--text-dim); flex: 1; }
+    #sisters-nearby-count { color: var(--gold); }
+
+    /* ── THE ORB — the heart of the UI ── */
+    /* Inspired by Fides. This is the distress button. */
+
+    #orb-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 36px 20px 24px;
+    }
+
+    #orb-wrap {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    /* Rotating rings — from Fides */
+    .ring-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .r-slow { animation: spin 20s linear infinite; }
+    .r-mid  { animation: spin 12s linear infinite reverse; }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    #orb {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 38%, #1a0a1e, #0e080f);
+      border: 2px solid var(--border2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      z-index: 2;
+      transition: all .3s ease;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    #orb:hover {
+      border-color: var(--gold-dim);
+      box-shadow: 0 0 40px var(--gold-glow);
+    }
+
+    /* States */
+    #orb.safe {
+      border-color: var(--safe);
+      background: radial-gradient(circle at 38% 38%, #180a1e, #0e080f);
+      box-shadow: 0 0 30px rgba(45,106,79,.2);
+    }
+
+    #orb.active {
+      border-color: var(--red);
+      background: radial-gradient(circle at 38% 38%, #1a0818, #0e080f);
+      box-shadow: 0 0 60px var(--red-glow), 0 0 120px rgba(212,64,144,.15);
+      animation: sos-pulse 1.5s ease-in-out infinite;
+    }
+
+    #orb.responded {
+      border-color: var(--green);
+      background: radial-gradient(circle at 38% 38%, #160a1e, #0e080f);
+      box-shadow: 0 0 50px var(--green-glow), 0 0 100px rgba(160,96,224,.2);
+      animation: responded-pulse 2s ease-in-out infinite;
+    }
+
+    #orb.locating {
+      border-color: var(--gold);
+      animation: locating-pulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes sos-pulse {
+      0%, 100% { box-shadow: 0 0 30px var(--red-glow); }
+      50%       { box-shadow: 0 0 80px rgba(200,74,74,.5); }
+    }
+
+    @keyframes responded-pulse {
+      0%, 100% { box-shadow: 0 0 20px var(--green-glow); }
+      50%       { box-shadow: 0 0 60px rgba(74,200,122,.4); }
+    }
+
+    @keyframes locating-pulse {
+      0%, 100% { box-shadow: 0 0 20px var(--gold-glow); }
+      50%       { box-shadow: 0 0 50px rgba(200,168,74,.3); }
+    }
+
+    .orb-icon { font-size: 40px; line-height: 1; }
+
+    .orb-label {
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: var(--muted);
+      margin-top: 6px;
+      text-transform: uppercase;
+      transition: color .3s;
+    }
+
+    #orb.active .orb-label { color: var(--red); }
+    #orb.responded .orb-label { color: var(--green); }
+    #orb.safe .orb-label { color: var(--safe); }
+    #orb.locating .orb-label { color: var(--gold); }
+
+    #orb-hint {
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    /* Context input — shows after orb is held */
+    #context-wrap {
+      display: none;
+      width: 100%;
+      max-width: 340px;
+      margin-top: 16px;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    #context-wrap.visible { display: flex; }
+
+    #context-input {
+      width: 100%;
+      padding: 11px 14px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      color: var(--white);
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    #context-input:focus { border-color: var(--gold-dim); }
+    #context-input::placeholder { color: var(--muted); font-size: 11px; }
+
+    #send-ping-btn {
+      width: 100%;
+      padding: 13px;
+      background: var(--red);
+      border: none;
+      color: white;
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+
+    #send-ping-btn:active { opacity: .8; }
+
+    /* Active ping panel */
+    #ping-panel {
+      display: none;
+      margin: 0 20px;
+      padding: 16px;
+      background: rgba(200,74,74,.06);
+      border: 1px solid rgba(200,74,74,.3);
+    }
+
+    #ping-panel.visible { display: block; }
+    #ping-panel.responded {
+      background: rgba(74,200,122,.06);
+      border-color: rgba(74,200,122,.3);
+    }
+
+    .ping-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .ping-label {
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .ping-value {
+      font-size: 12px;
+      color: var(--white);
+    }
+
+    .ping-value.hot { color: var(--red); }
+    .ping-value.good { color: var(--green); }
+
+    #safe-btn {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      border: 1px solid var(--green);
+      color: var(--green);
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all .2s;
+      margin-top: 12px;
+    }
+
+    #safe-btn:hover { background: var(--green-glow); }
+    #safe-btn:active { transform: scale(.98); }
+
+    .responder-card {
+      padding: 10px 12px;
+      background: rgba(74,200,122,.05);
+      border: 1px solid rgba(74,200,122,.2);
+      margin-top: 8px;
+    }
+
+    .responder-name {
+      font-size: 11px;
+      color: var(--green);
+      letter-spacing: 1px;
+    }
+
+    .responder-status {
+      font-size: 9px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      margin-top: 3px;
+    }
+
+    /* ── BOTTOM NAV ── */
+    #bottom-nav {
+      display: flex;
+      border-top: 1px solid var(--border);
+      background: var(--bg2);
+      position: sticky;
+      bottom: 0;
+      z-index: 50;
+    }
+
+    .nav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 8px 14px;
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: color .2s;
+      gap: 4px;
+    }
+
+    .nav-btn.active { color: var(--gold); }
+    .nav-btn:hover { color: var(--text); }
+    .nav-icon { font-size: 18px; }
+
+    /* ── NEARBY TAB ── */
+    #tab-nearby {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      padding: 20px;
+      gap: 12px;
+      overflow-y: auto;
+    }
+
+    #tab-nearby.active { display: flex; }
+
+    .tab-title {
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nearby-card {
+      padding: 14px;
+      background: var(--bg2);
+      border: 1px solid rgba(200,74,74,.3);
+      cursor: pointer;
+      transition: border-color .2s;
+    }
+
+    .nearby-card:hover { border-color: rgba(200,74,74,.6); }
+
+    .nearby-dist {
+      font-size: 11px;
+      color: var(--red);
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .nearby-context {
+      font-size: 12px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .nearby-meta {
+      font-size: 9px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    .respond-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background: transparent;
+      border: 1px solid var(--red);
+      color: var(--red);
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .respond-btn:hover { background: var(--red-glow); }
+    .respond-btn:active { transform: scale(.98); }
+
+    #no-nearby {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 1px;
+      line-height: 2;
+    }
+
+    /* ── ABOUT TAB ── */
+    #tab-about {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      padding: 24px 20px;
+      gap: 20px;
+      overflow-y: auto;
+    }
+
+    #tab-about.active { display: flex; }
+
+    .about-section { border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+
+    .about-title {
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      letter-spacing: 3px;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .about-body {
+      font-family: 'EB Garamond', serif;
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--text);
+    }
+
+    .about-body p + p { margin-top: 12px; }
+
+    .about-stat {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .about-num {
+      font-family: 'Cinzel', serif;
+      font-size: 20px;
+      color: var(--red);
+      flex-shrink: 0;
+    }
+
+    .about-stat-text {
+      font-size: 11px;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    /* ── STATUS MESSAGES ── */
+    #status-bar {
+      margin: 12px 20px 0;
+      padding: 10px 14px;
+      font-size: 10px;
+      letter-spacing: 1px;
+      line-height: 1.7;
+      display: none;
+    }
+
+    #status-bar.visible { display: block; }
+    #status-bar.info    { background: var(--bg2); border: 1px solid var(--border); color: var(--text-dim); }
+    #status-bar.error   { background: rgba(200,74,74,.07); border: 1px solid rgba(200,74,74,.3); color: #e07878; }
+    #status-bar.success { background: rgba(74,200,122,.07); border: 1px solid rgba(74,200,122,.3); color: var(--green); }
+
+    /* ── 911 REMINDER ── */
+    #emergency-reminder {
+      margin: 16px 20px;
+      padding: 10px 14px;
+      background: rgba(200,74,74,.06);
+      border: 1px solid rgba(200,74,74,.2);
+      font-size: 9px;
+      letter-spacing: 1px;
+      color: var(--muted);
+      line-height: 1.8;
+      text-align: center;
+    }
+
+    #emergency-reminder strong { color: var(--red); }
+
+    /* ── HOLD TO PING instruction ── */
+    #hold-instruction {
+      margin-top: 8px;
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+      text-transform: uppercase;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     AUTH PAGE
+══════════════════════════════════════════════════════════ -->
+<div id="page-auth" class="page active">
+  <div class="auth-logo">S I S S</div>
+  <div class="auth-sub">Women protecting women</div>
+
+  <div class="auth-tabs">
+    <button class="auth-tab active" onclick="showAuthTab('login')">Sign In</button>
+    <button class="auth-tab" onclick="showAuthTab('register')">Join</button>
+  </div>
+
+  <!-- Login -->
+  <form class="auth-form active" id="form-login" onsubmit="return false;">
+    <input class="auth-input" type="text" id="login-username"
+           placeholder="Username" autocomplete="username" autocapitalize="none"/>
+    <input class="auth-input" type="password" id="login-password"
+           placeholder="Password" autocomplete="current-password"/>
+    <button class="auth-btn" id="login-btn" onclick="doLogin()">Enter the Network</button>
+    <div class="auth-msg" id="login-msg"></div>
+  </form>
+
+  <!-- Register -->
+  <form class="auth-form" id="form-register" onsubmit="return false;">
+    <input class="auth-input" type="text" id="reg-username"
+           placeholder="Username" autocomplete="username" autocapitalize="none"/>
+    <input class="auth-input" type="email" id="reg-email"
+           placeholder="Email address" autocomplete="email"/>
+    <input class="auth-input" type="text" id="reg-display"
+           placeholder="Display name (optional)"/>
+    <input class="auth-input" type="password" id="reg-password"
+           placeholder="Password (8+ characters)" autocomplete="new-password"/>
+    <input class="auth-input" type="text" id="reg-invite"
+           placeholder="Invite code  (SSTR-XXXX-XXXX)"
+           autocomplete="off" style="letter-spacing:2px;text-transform:uppercase;"/>
+    <button class="auth-btn" id="register-btn" onclick="doRegister()">Join Siss</button>
+    <div class="auth-msg" id="register-msg"></div>
+  </form>
+
+  <div class="auth-notice">
+    <p>Siss is a mutual aid safety network for women. When you send a distress ping, verified Sisters nearby are alerted.</p>
+    <p style="margin-top:8px;">Your location is shared only when you choose to ping. It is never stored after your ping resolves. No biometrics. No phone number required.</p>
+    <p style="margin-top:8px;">This network does not replace emergency services. If your life is in immediate danger, call 911 first.</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     MAIN APP PAGE
+══════════════════════════════════════════════════════════ -->
+<div id="page-app" class="page">
+
+  <!-- Header -->
+  <div id="app-header">
+    <div id="app-logo">S I S S</div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div id="app-user"></div>
+      <button id="logout-btn" onclick="doLogout()">Sign Out</button>
+    </div>
+  </div>
+
+  <!-- Network status -->
+  <div id="network-bar">
+    <div class="net-dot" id="net-dot"></div>
+    <span id="net-label">Locating…</span>
+    <span id="sisters-nearby-count"></span>
+  </div>
+
+  <!-- Main content area — ORB tab -->
+  <div id="tab-orb" style="display:flex;flex-direction:column;flex:1;">
+
+    <!-- Status bar -->
+    <div id="status-bar"></div>
+
+    <!-- 911 reminder -->
+    <div id="emergency-reminder">
+      <strong>If your life is in immediate danger — call 911 first.</strong><br>
+      Siss is mutual aid, not emergency services.
+    </div>
+
+    <!-- Active ping panel -->
+    <div id="ping-panel">
+      <div class="ping-row">
+        <span class="ping-label">Status</span>
+        <span class="ping-value hot" id="ping-status-text">Active</span>
+      </div>
+      <div class="ping-row">
+        <span class="ping-label">Sisters notified</span>
+        <span class="ping-value" id="ping-response-count">—</span>
+      </div>
+      <div class="ping-row">
+        <span class="ping-label">Expires in</span>
+        <span class="ping-value" id="ping-time-left">—</span>
+      </div>
+      <div id="responders-list"></div>
+      <button id="safe-btn" onclick="markSafe()">✓ I Am Safe — Cancel Ping</button>
+    </div>
+
+    <!-- THE ORB -->
+    <div id="orb-section">
+      <div id="orb-wrap">
+        <!-- Rotating rings from Fides -->
+        <svg class="ring-svg r-slow" viewBox="0 0 220 220" fill="none">
+          <circle cx="110" cy="110" r="104" stroke="#e060a0" stroke-width="0.5"
+                  stroke-dasharray="4 8" opacity="0.25"/>
+          <circle cx="110" cy="110" r="96" stroke="#e060a0" stroke-width="0.3"
+                  opacity="0.1"/>
+        </svg>
+        <svg class="ring-svg r-mid" viewBox="0 0 220 220" fill="none">
+          <circle cx="110" cy="110" r="108" stroke="#c470e8" stroke-width="0.4"
+                  stroke-dasharray="2 12" opacity="0.2"/>
+        </svg>
+
+        <!-- THE ORB BUTTON -->
+        <div id="orb" ontouchstart="orbTouchStart(event)"
+             ontouchend="orbTouchEnd(event)"
+             onmousedown="orbMouseDown(event)"
+             onmouseup="orbMouseEnd(event)"
+             onmouseleave="orbMouseEnd(event)">
+          <div class="orb-icon" id="orb-icon">🔮</div>
+          <div class="orb-label" id="orb-label">Sisters</div>
+        </div>
+      </div>
+
+      <div id="hold-instruction">Hold 2 seconds to send distress ping</div>
+
+      <!-- Context input — slides in after hold -->
+      <div id="context-wrap">
+        <input type="text" id="context-input" maxlength="200"
+               placeholder="Optional: where are you? (e.g. parking level 2, blue door)"
+               autocomplete="off"/>
+        <button id="send-ping-btn" onclick="sendPing()">⚡ Send Distress Ping</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-orb -->
+
+  <!-- NEARBY TAB -->
+  <div id="tab-nearby" class="tab-content">
+    <div class="tab-title">Sisters Nearby</div>
+    <div id="nearby-list">
+      <div id="no-nearby">
+        Checking for active pings near you…<br>
+        <span style="color:var(--muted)">Pull down to refresh</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT TAB -->
+  <div id="tab-about" class="tab-content">
+    <div class="about-section">
+      <div class="about-title">Why Sisters Exists</div>
+      <div class="about-body">
+        <p>Men and their laws, religions, and institutions have never been protectors of women. They have used power to limit women's access to resources, autonomy, and safety — manufacturing dependency rather than providing it.</p>
+        <p>Siss is what protection actually looks like: women showing up for each other, immediately, without waiting for institutions that have historically failed them.</p>
+      </div>
+    </div>
+
+    <div class="about-section">
+      <div class="about-title">The Numbers</div>
+      <div class="about-stat">
+        <div class="about-num">137</div>
+        <div class="about-stat-text">Women and girls killed by intimate partners or family members every day — one every 10 minutes. UN Women, 2024.</div>
+      </div>
+      <div class="about-stat">
+        <div class="about-num">24M</div>
+        <div class="about-stat-text">Estimated unreported cases of sexual violence in the US alone every year. CDC.</div>
+      </div>
+      <div class="about-stat">
+        <div class="about-num">90%</div>
+        <div class="about-stat-text">Of all homicides are committed by men. FBI Uniform Crime Reports.</div>
+      </div>
+      <div class="about-stat">
+        <div class="about-num">70×</div>
+        <div class="about-stat-text">More likely to be killed in the two weeks after leaving an abusive relationship. Dr. Jacquelyn Campbell, Johns Hopkins.</div>
+      </div>
+    </div>
+
+    <div class="about-section">
+      <div class="about-title">How It Works</div>
+      <div class="about-body">
+        <p>Hold the orb for 2 seconds. Add a brief note if you can (parking level, color of door, landmark). Send.</p>
+        <p>Verified Sisters within 2 miles are notified immediately. They see your approximate location and can confirm they're on their way.</p>
+        <p>When you're safe, press "I Am Safe." Your location is erased from our servers immediately — not archived, not retained, not logged.</p>
+      </div>
+    </div>
+
+    <div class="about-section">
+      <div class="about-title">Your Privacy</div>
+      <div class="about-body">
+        <p>Your location is only shared when YOU send a ping. It is never stored after your ping resolves or expires. No behavioral profiles. No biometrics. No phone number required. No tracking between sessions.</p>
+        <p>Siss is built by women, for women, on the principle that safety and surveillance are opposites.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- INVITES TAB -->
+  <div id="tab-invites" style="display:none;flex-direction:column;flex:1;padding:20px;gap:16px;overflow-y:auto;">
+    <div class="tab-title">Invite a Sister</div>
+    <div id="invite-limit-bar" style="font-size:10px;letter-spacing:1px;color:var(--muted);padding:10px 14px;background:var(--bg2);border:1px solid var(--border);"></div>
+    <button id="gen-invite-btn" onclick="generateInvite()" style="width:100%;padding:13px;background:transparent;border:1px solid var(--gold);color:var(--gold);font-family:Cinzel,serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;">Generate Invite Code</button>
+    <div id="new-code-display" style="display:none;padding:16px;background:var(--bg2);border:1px solid rgba(200,168,74,.4);text-align:center;">
+      <div style="font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;">Your invite code</div>
+      <div id="new-code-text" style="font-family:Space Mono,monospace;font-size:20px;color:var(--gold);letter-spacing:4px;margin-bottom:12px;"></div>
+      <div style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:12px;">Expires in 7 days · Single use</div>
+      <button onclick="copyCode()" style="width:100%;padding:10px;background:transparent;border:1px solid var(--border);color:var(--text-dim);font-family:Space Mono,monospace;font-size:10px;letter-spacing:2px;cursor:pointer;">Copy Code</button>
+    </div>
+    <div style="font-size:10px;letter-spacing:1px;color:var(--muted);line-height:1.8;padding:12px 14px;background:var(--bg2);border:1px solid var(--border);">
+      Every code you generate is linked to your account. If someone you invite misuses the network, you will be notified. You can revoke unused codes at any time.
+    </div>
+    <div style="font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-top:8px;border-top:1px solid var(--border);padding-top:16px;">Your Active Codes</div>
+    <div id="my-codes-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+    <div style="font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-top:8px;border-top:1px solid var(--border);padding-top:16px;">Sisters You Have Invited</div>
+    <div id="invite-tree-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div id="bottom-nav">
+    <button class="nav-btn active" id="nav-orb" onclick="switchTab('orb')">
+      <span class="nav-icon">🔮</span>
+      <span>Ping</span>
+    </button>
+    <button class="nav-btn" id="nav-nearby" onclick="switchTab('nearby')">
+      <span class="nav-icon">📡</span>
+      <span>Nearby</span>
+    </button>
+    <button class="nav-btn" id="nav-about" onclick="switchTab('about')">
+    <button class="nav-btn" id="nav-invites" onclick="switchTab('invites')">
+      <span class="nav-icon">🔑</span>
+      <span>Invites</span>
+    </button>
+      <span class="nav-icon">⚖</span>
+      <span>About</span>
+    </button>
+  </div>
+
+</div><!-- /page-app -->
+
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════════════════════
+
+const API  = '/sisters/api';
+let   S    = {
+  token:        localStorage.getItem('sisters_token'),
+  username:     localStorage.getItem('sisters_username'),
+  displayName:  localStorage.getItem('sisters_display'),
+  location:     null,       // { lat, lng, accuracy } — never persisted
+  activePing:   null,       // current ping object
+  pingPollInterval: null,
+  nearbyPollInterval: null,
+  holdTimer:    null,
+  isHolding:    false,
+  pendingSend:  false,
+};
+
+// ── Haversine distance — from Themis ──────────────────────────────────────────
+function haversine(lat1, lng1, lat2, lng2) {
+  const R    = 3956; // miles
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a    = Math.sin(dLat/2)**2 +
+               Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*
+               Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════════════════════
+
+window.addEventListener('DOMContentLoaded', () => {
+  if (S.token) {
+    showApp();
+  }
+});
+
+function showApp() {
+  document.getElementById('page-auth').classList.remove('active');
+  document.getElementById('page-app').classList.add('active');
+  document.getElementById('app-user').textContent = S.displayName || S.username || '';
+  startLocationWatch();
+  pollPingStatus();
+  S.pingPollInterval = setInterval(pollPingStatus, 15000);
+}
+
+function showAuth() {
+  document.getElementById('page-app').classList.remove('active');
+  document.getElementById('page-auth').classList.add('active');
+  clearInterval(S.pingPollInterval);
+  clearInterval(S.nearbyPollInterval);
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════════════════════════════════════════
+
+function showAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('form-' + tab).classList.add('active');
+}
+
+async function doLogin() {
+  const btn      = document.getElementById('login-btn');
+  const msgEl    = document.getElementById('login-msg');
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value;
+
+  msgEl.textContent = '';
+  msgEl.className   = 'auth-msg';
+
+  if (!username || !password) {
+    msgEl.textContent = 'Please enter username and password.';
+    msgEl.className   = 'auth-msg error';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Connecting…';
+
+  try {
+    const r = await fetch(`${API}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+    const d = await r.json();
+
+    if (d.ok) {
+      S.token       = d.token;
+      S.username    = d.username;
+      S.displayName = d.display_name;
+      localStorage.setItem('sisters_token',   d.token);
+      localStorage.setItem('sisters_username', d.username);
+      localStorage.setItem('sisters_display',  d.display_name || d.username);
+      showApp();
+    } else {
+      msgEl.textContent = d.error || 'Login failed.';
+      msgEl.className   = 'auth-msg error';
+    }
+  } catch (e) {
+    msgEl.textContent = 'Connection error. Check your internet.';
+    msgEl.className   = 'auth-msg error';
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = 'Enter the Network';
+  }
+}
+
+async function doRegister() {
+  const btn      = document.getElementById('register-btn');
+  const msgEl    = document.getElementById('register-msg');
+  const username = document.getElementById('reg-username').value.trim();
+  const email    = document.getElementById('reg-email').value.trim();
+  const display  = document.getElementById('reg-display').value.trim();
+  const password    = document.getElementById('reg-password').value;
+  const inviteCode = document.getElementById('reg-invite').value.trim().toUpperCase();
+
+  msgEl.textContent = '';
+  msgEl.className   = 'auth-msg';
+
+  if (!username || !email || !password || !inviteCode) {
+    msgEl.textContent = 'Username, email, password, and invite code are all required.';
+    msgEl.className   = 'auth-msg error';
+    return;
+  }
+
+  btn.disabled    = true;
+  btn.textContent = 'Joining…';
+
+  try {
+    const r = await fetch(`${API}/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, email, display_name: display, password, invite_code: inviteCode }),
+    });
+    const d = await r.json();
+
+    if (d.ok) {
+      S.token       = d.token;
+      S.username    = d.username;
+      S.displayName = d.display_name;
+      localStorage.setItem('sisters_token',   d.token);
+      localStorage.setItem('sisters_username', d.username);
+      localStorage.setItem('sisters_display',  d.display_name || d.username);
+      showApp();
+    } else {
+      msgEl.textContent = d.error || 'Registration failed.';
+      msgEl.className   = 'auth-msg error';
+    }
+  } catch (e) {
+    msgEl.textContent = 'Connection error. Check your internet.';
+    msgEl.className   = 'auth-msg error';
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = 'Join Siss';
+  }
+}
+
+function doLogout() {
+  localStorage.removeItem('sisters_token');
+  localStorage.removeItem('sisters_username');
+  localStorage.removeItem('sisters_display');
+  S.token = S.username = S.displayName = S.location = S.activePing = null;
+  clearInterval(S.pingPollInterval);
+  clearInterval(S.nearbyPollInterval);
+  showAuth();
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// LOCATION — from Fides pattern
+// PRIVACY: Location is held only in memory (S.location). Never persisted.
+// ══════════════════════════════════════════════════════════════════════════════
+
+function startLocationWatch() {
+  const dot   = document.getElementById('net-dot');
+  const label = document.getElementById('net-label');
+
+  dot.className   = 'net-dot locating';
+  label.textContent = 'Locating…';
+
+  if (!navigator.geolocation) {
+    dot.className   = 'net-dot error';
+    label.textContent = 'Location unavailable — requires HTTPS';
+    return;
+  }
+
+  // Require HTTPS in production
+  if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+    dot.className   = 'net-dot error';
+    label.textContent = 'HTTPS required for location';
+    return;
+  }
+
+  navigator.geolocation.watchPosition(
+    pos => {
+      S.location = {
+        lat:      pos.coords.latitude,
+        lng:      pos.coords.longitude,
+        accuracy: pos.coords.accuracy,
+      };
+      dot.className   = 'net-dot online';
+      label.textContent = 'Location active';
+      checkNearbyCount();
+    },
+    err => {
+      dot.className   = 'net-dot error';
+      label.textContent = 'Location denied — enable to use';
+      console.warn('[Sisters] Geolocation error:', err.message);
+    },
+    { enableHighAccuracy: true, maximumAge: 10000, timeout: 15000 }
+  );
+}
+
+async function checkNearbyCount() {
+  if (!S.location || !S.token) return;
+  try {
+    const r = await fetch(`${API}/ping/nearby`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${S.token}`,
+      },
+      body: JSON.stringify({ lat: S.location.lat, lng: S.location.lng }),
+    });
+    const d = await r.json();
+    if (d.ok && d.count > 0) {
+      document.getElementById('sisters-nearby-count').textContent =
+        `${d.count} ping${d.count !== 1 ? 's' : ''} nearby`;
+    } else {
+      document.getElementById('sisters-nearby-count').textContent = '';
+    }
+  } catch (e) {
+    // Silently fail — don't disrupt main UI
+  }
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ORB — HOLD TO PING
+// Adapted from Fides orb interaction pattern.
+// 2-second hold to prevent accidental pings.
+// ══════════════════════════════════════════════════════════════════════════════
+
+function orbTouchStart(e) {
+  e.preventDefault();
+  beginHold();
+}
+
+function orbTouchEnd(e) {
+  e.preventDefault();
+  endHold();
+}
+
+function orbMouseDown(e) {
+  beginHold();
+}
+
+function orbMouseEnd(e) {
+  endHold();
+}
+
+function beginHold() {
+  if (S.activePing) return;  // Already pinging
+  if (S.pendingSend) return;
+
+  S.isHolding = true;
+  setOrbState('locating');
+  document.getElementById('orb-label').textContent = 'Hold…';
+  document.getElementById('hold-instruction').textContent = 'Keep holding…';
+
+  S.holdTimer = setTimeout(() => {
+    if (S.isHolding) {
+      // Hold complete — show context input
+      S.pendingSend = true;
+      document.getElementById('context-wrap').classList.add('visible');
+      document.getElementById('hold-instruction').textContent =
+        'Add a note if you can, then send';
+      document.getElementById('orb-label').textContent = 'Ready';
+      document.getElementById('context-input').focus();
+    }
+  }, 2000);
+}
+
+function endHold() {
+  S.isHolding = false;
+  clearTimeout(S.holdTimer);
+
+  if (!S.pendingSend && !S.activePing) {
+    setOrbState('idle');
+    document.getElementById('orb-label').textContent = 'Sisters';
+    document.getElementById('hold-instruction').textContent =
+      'Hold 2 seconds to send distress ping';
+  }
+}
+
+function setOrbState(state) {
+  const orb = document.getElementById('orb');
+  orb.className = '';  // Clear all state classes
+  if (state !== 'idle') orb.classList.add(state);
+
+  const icons = {
+    idle:      '🔮',
+    locating:  '📡',
+    active:    '🆘',
+    responded: '💚',
+    safe:      '✓',
+  };
+
+  document.getElementById('orb-icon').textContent = icons[state] || '🔮';
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SEND PING
+// ══════════════════════════════════════════════════════════════════════════════
+
+async function sendPing() {
+  if (!S.token) { showStatus('Please sign in.', 'error'); return; }
+
+  if (!S.location) {
+    showStatus('Location not available. Enable location access and try again.', 'error');
+    return;
+  }
+
+  const context = document.getElementById('context-input').value.trim();
+  const btn     = document.getElementById('send-ping-btn');
+
+  btn.disabled    = true;
+  btn.textContent = 'Sending…';
+
+  try {
+    const r = await fetch(`${API}/ping`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${S.token}`,
+      },
+      body: JSON.stringify({
+        lat:             S.location.lat,
+        lng:             S.location.lng,
+        accuracy_meters: S.location.accuracy,
+        context:         context || null,
+      }),
+    });
+
+    const d = await r.json();
+
+    if (d.ok) {
+      S.activePing  = d;
+      S.pendingSend = false;
+      document.getElementById('context-wrap').classList.remove('visible');
+      document.getElementById('context-input').value = '';
+      setOrbState('active');
+      document.getElementById('orb-label').textContent = 'SOS Active';
+      document.getElementById('hold-instruction').textContent = '';
+      showPingPanel(d.ping_id);
+      showStatus('Ping sent. Sisters nearby are being notified.', 'success');
+      pollPingStatus();
+    } else {
+      showStatus(d.error || 'Failed to send ping.', 'error');
+    }
+  } catch (e) {
+    showStatus('Connection error. Check your internet and try again.', 'error');
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = '⚡ Send Distress Ping';
+  }
+}
+
+function showPingPanel(pingId) {
+  const panel = document.getElementById('ping-panel');
+  panel.classList.add('visible');
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// PING STATUS POLLING
+// ══════════════════════════════════════════════════════════════════════════════
+
+async function pollPingStatus() {
+  if (!S.token) return;
+  try {
+    const r = await fetch(`${API}/ping/status`, {
+      headers: { 'Authorization': `Bearer ${S.token}` },
+    });
+    const d = await r.json();
+
+    if (!d.ok) return;
+
+    if (!d.active_ping) {
+      // No active ping
+      if (S.activePing) {
+        // Was active, now resolved/expired
+        S.activePing = null;
+        setOrbState('idle');
+        document.getElementById('orb-label').textContent = 'Sisters';
+        document.getElementById('hold-instruction').textContent =
+          'Hold 2 seconds to send distress ping';
+        document.getElementById('ping-panel').classList.remove('visible');
+        document.getElementById('ping-panel').classList.remove('responded');
+      }
+      return;
+    }
+
+    const ping = d.active_ping;
+    S.activePing = ping;
+
+    // Update orb state
+    if (ping.response_count > 0) {
+      setOrbState('responded');
+      document.getElementById('orb-label').textContent = 'Help Coming';
+      document.getElementById('ping-panel').classList.add('responded');
+    } else {
+      setOrbState('active');
+      document.getElementById('orb-label').textContent = 'SOS Active';
+    }
+
+    // Update panel
+    document.getElementById('ping-panel').classList.add('visible');
+    document.getElementById('ping-status-text').textContent =
+      ping.response_count > 0 ? 'Sisters responding' : 'Alerting sisters…';
+    document.getElementById('ping-response-count').textContent =
+      ping.response_count > 0
+        ? `${ping.response_count} sister${ping.response_count !== 1 ? 's' : ''}`
+        : 'Waiting…';
+    document.getElementById('ping-time-left').textContent =
+      `${ping.minutes_left} min`;
+
+    // Responders
+    const list = document.getElementById('responders-list');
+    list.innerHTML = '';
+    if (ping.responders && ping.responders.length > 0) {
+      ping.responders.forEach(r => {
+        const card = document.createElement('div');
+        card.className = 'responder-card';
+        const dist = S.location && r.responder_lat && r.responder_lng
+          ? ` · ${haversine(S.location.lat, S.location.lng,
+              r.responder_lat, r.responder_lng).toFixed(1)} mi away`
+          : '';
+        card.innerHTML = `
+          <div class="responder-name">🟢 ${r.display_name}</div>
+          <div class="responder-status">${r.status === 'en_route' ? 'On her way' : 'Arrived'}${dist}</div>
+        `;
+        list.appendChild(card);
+      });
+    }
+
+  } catch (e) {
+    // Silently fail — don't disrupt UI
+  }
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// MARK SAFE
+// ══════════════════════════════════════════════════════════════════════════════
+
+async function markSafe() {
+  if (!S.activePing || !S.token) return;
+
+  const btn = document.getElementById('safe-btn');
+  btn.disabled = true;
+  btn.textContent = 'Marking safe…';
+
+  try {
+    const r = await fetch(`${API}/ping/resolve`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${S.token}`,
+      },
+      body: JSON.stringify({ ping_id: S.activePing.ping_id || S.activePing.id }),
+    });
+
+    const d = await r.json();
+
+    if (d.ok) {
+      S.activePing = null;
+      S.pendingSend = false;
+      setOrbState('safe');
+      document.getElementById('orb-label').textContent = 'Safe';
+      document.getElementById('hold-instruction').textContent =
+        'Your location has been erased';
+      document.getElementById('ping-panel').classList.remove('visible');
+      document.getElementById('ping-panel').classList.remove('responded');
+      showStatus('You are marked safe. Your location has been erased.', 'success');
+
+      setTimeout(() => {
+        setOrbState('idle');
+        document.getElementById('orb-label').textContent = 'Sisters';
+        document.getElementById('hold-instruction').textContent =
+          'Hold 2 seconds to send distress ping';
+        hideStatus();
+      }, 4000);
+    } else {
+      showStatus(d.error || 'Could not mark safe. Try again.', 'error');
+    }
+  } catch (e) {
+    showStatus('Connection error.', 'error');
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = '✓ I Am Safe — Cancel Ping';
+  }
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// NEARBY TAB
+// ══════════════════════════════════════════════════════════════════════════════
+
+async function loadNearby() {
+  if (!S.token || !S.location) {
+    document.getElementById('no-nearby').textContent =
+      S.location ? 'Sign in to see nearby pings.' : 'Enable location to see nearby pings.';
+    return;
+  }
+
+  try {
+    const r = await fetch(`${API}/ping/nearby`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${S.token}`,
+      },
+      body: JSON.stringify({ lat: S.location.lat, lng: S.location.lng }),
+    });
+
+    const d = await r.json();
+    const list = document.getElementById('nearby-list');
+
+    if (!d.ok || !d.pings || d.pings.length === 0) {
+      list.innerHTML = '<div id="no-nearby">No active pings within 2 miles.<br><span style="color:var(--muted)">Stay alert. Refresh to check again.</span></div>';
+      return;
+    }
+
+    list.innerHTML = '';
+    d.pings.forEach(ping => {
+      const card = document.createElement('div');
+      card.className = 'nearby-card';
+      card.innerHTML = `
+        <div class="nearby-dist">📍 ${ping.distance_miles} miles away</div>
+        <div class="nearby-context">${ping.context || 'No additional context provided.'}</div>
+        <div class="nearby-meta">
+          ${ping.response_count} sister${ping.response_count !== 1 ? 's' : ''} responding ·
+          Sent ${timeAgo(ping.created_at)}
+        </div>
+        <button class="respond-btn" onclick="respondToPing(${ping.ping_id})">
+          I'm Going to Help
+        </button>
+      `;
+      list.appendChild(card);
+    });
+
+  } catch (e) {
+    document.getElementById('no-nearby').textContent = 'Error loading nearby pings.';
+  }
+}
+
+async function respondToPing(pingId) {
+  if (!S.token || !S.location) {
+    showStatus('Location required to respond.', 'error');
+    return;
+  }
+
+  try {
+    const r = await fetch(`${API}/respond`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${S.token}`,
+      },
+      body: JSON.stringify({
+        ping_id: pingId,
+        lat:     S.location.lat,
+        lng:     S.location.lng,
+      }),
+    });
+
+    const d = await r.json();
+
+    if (d.ok) {
+      showStatus('Response confirmed. The Sister has been notified you are on your way.', 'success');
+      loadNearby();
+    } else {
+      showStatus(d.error || 'Could not register response.', 'error');
+    }
+  } catch (e) {
+    showStatus('Connection error.', 'error');
+  }
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TAB NAVIGATION
+// ══════════════════════════════════════════════════════════════════════════════
+
+function switchTab(tab) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('nav-' + tab).classList.add('active');
+
+  document.getElementById('tab-orb').style.display    = tab === 'orb'    ? 'flex' : 'none';
+  document.getElementById('tab-nearby').style.display = tab === 'nearby' ? 'flex' : 'none';
+  document.getElementById('tab-about').style.display   = tab === 'about'   ? 'flex' : 'none';
+  document.getElementById('tab-invites').style.display = tab === 'invites' ? 'flex' : 'none';
+
+  if (tab === 'nearby')  loadNearby();
+  if (tab === 'invites') loadInvites();
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// UI HELPERS
+// ══════════════════════════════════════════════════════════════════════════════
+
+function showStatus(msg, type) {
+  const bar = document.getElementById('status-bar');
+  bar.textContent = msg;
+  bar.className   = `visible ${type}`;
+  bar.style.display = 'block';
+}
+
+function hideStatus() {
+  const bar = document.getElementById('status-bar');
+  bar.style.display = 'none';
+  bar.className = '';
+}
+
+function timeAgo(isoStr) {
+  const diff = Math.floor((Date.now() - new Date(isoStr)) / 1000);
+  if (diff < 60)   return `${diff}s ago`;
+  if (diff < 3600) return `${Math.floor(diff/60)}m ago`;
+  return `${Math.floor(diff/3600)}h ago`;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// INVITE SYSTEM
+// ══════════════════════════════════════════════════════════════════════════════
+
+let _lastGeneratedCode = null;
+
+async function generateInvite() {
+  if (!S.token) return;
+  const btn = document.getElementById("gen-invite-btn");
+  btn.disabled = true;
+  btn.textContent = "Generating…";
+  try {
+    const r = await fetch(`${API}/invite/generate`, {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${S.token}` },
+    });
+    const d = await r.json();
+    if (d.ok) {
+      _lastGeneratedCode = d.code;
+      document.getElementById("new-code-text").textContent = d.code;
+      document.getElementById("new-code-display").style.display = "block";
+      if (d.remaining_today !== null && d.remaining_today !== undefined) {
+        document.getElementById("invite-limit-bar").textContent =
+          `${d.remaining_today} invite${d.remaining_today !== 1 ? "s" : ""} remaining today`;
+      }
+      loadInviteCodes();
+    } else {
+      showStatus(d.error || "Could not generate code.", "error");
+    }
+  } catch(e) {
+    showStatus("Connection error.", "error");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Generate Invite Code";
+  }
+}
+
+function copyCode() {
+  if (!_lastGeneratedCode) return;
+  navigator.clipboard.writeText(_lastGeneratedCode).then(() => {
+    showStatus("Code copied to clipboard. Share it with a Sister you trust.", "success");
+  }).catch(() => {
+    showStatus("Copy failed — select the code manually.", "error");
+  });
+}
+
+async function loadInvites() {
+  if (!S.token) return;
+  try {
+    const [codesRes, treeRes] = await Promise.all([
+      fetch(`${API}/invite/mine`, { headers: { "Authorization": `Bearer ${S.token}` } }),
+      fetch(`${API}/invite/tree`, { headers: { "Authorization": `Bearer ${S.token}` } }),
+    ]);
+    const codesData = await codesRes.json();
+    const treeData  = await treeRes.json();
+
+    if (codesData.ok) {
+      const limitBar = document.getElementById("invite-limit-bar");
+      if (codesData.daily_limit === null) {
+        limitBar.textContent = "Unlimited invites (Founder)";
+      } else {
+        limitBar.textContent =
+          `${codesData.remaining_today} of ${codesData.daily_limit} invites remaining today`;
+      }
+      loadInviteCodes(codesData.codes);
+    }
+
+    if (treeData.ok) {
+      loadInviteTree(treeData.tree);
+    }
+  } catch(e) { /* silently fail */ }
+}
+
+function loadInviteCodes(codes) {
+  const list = document.getElementById("my-codes-list");
+  if (!codes || codes.length === 0) {
+    list.innerHTML = `<div style="font-size:10px;color:var(--muted);letter-spacing:1px;">No codes generated yet.</div>`;
+    return;
+  }
+  list.innerHTML = "";
+  codes.filter(c => c.status === "active").forEach(c => {
+    const card = document.createElement("div");
+    card.style.cssText = "padding:12px 14px;background:var(--bg2);border:1px solid rgba(200,168,74,.25);display:flex;justify-content:space-between;align-items:center;gap:12px;";
+    const expires = new Date(c.expires_at);
+    const daysLeft = Math.ceil((expires - Date.now()) / 86400000);
+    card.innerHTML = `
+      <div>
+        <div style="font-family:Space Mono,monospace;font-size:14px;color:var(--gold);letter-spacing:3px;">${c.code}</div>
+        <div style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:4px;">Expires in ${daysLeft} day${daysLeft !== 1 ? "s" : ""}</div>
+      </div>
+      <button onclick="revokeCode('${c.code}')" style="font-size:9px;letter-spacing:1px;color:var(--muted);background:none;border:1px solid var(--border);padding:5px 8px;cursor:pointer;font-family:Space Mono,monospace;">Revoke</button>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function loadInviteTree(tree) {
+  const list = document.getElementById("invite-tree-list");
+  if (!tree || tree.length === 0) {
+    list.innerHTML = `<div style="font-size:10px;color:var(--muted);letter-spacing:1px;">No Sisters invited yet.</div>`;
+    return;
+  }
+  list.innerHTML = "";
+  tree.forEach(s => {
+    const card = document.createElement("div");
+    card.style.cssText = "padding:10px 14px;background:var(--bg2);border:1px solid var(--border);";
+    card.innerHTML = `
+      <div style="font-size:12px;color:var(--green);">🟢 ${s.display_name}</div>
+      <div style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:3px;">
+        Joined ${timeAgo(s.joined_at)} · Has invited ${s.they_invited} sister${s.they_invited !== 1 ? "s" : ""}
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+async function revokeCode(code) {
+  if (!S.token) return;
+  if (!confirm(`Revoke ${code}? This cannot be undone.`)) return;
+  try {
+    const r = await fetch(`${API}/invite/revoke`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${S.token}`,
+      },
+      body: JSON.stringify({ code }),
+    });
+    const d = await r.json();
+    if (d.ok) {
+      showStatus("Code revoked.", "success");
+      loadInvites();
+    } else {
+      showStatus(d.error || "Could not revoke code.", "error");
+    }
+  } catch(e) {
+    showStatus("Connection error.", "error");
+  }
+}
+</script>
+</body>
+</html>
