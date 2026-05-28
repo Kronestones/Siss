@@ -279,8 +279,10 @@ def register():
 
     except Exception as e:
         session.rollback()
+        import traceback
         print(f"[Sisters] register error: {e}")
-        return jsonify({"ok": False, "error": "Registration failed. Please try again."}), 500
+        print(traceback.format_exc())
+        return jsonify({"ok": False, "error": str(e)}), 500
     finally:
         session.close()
 
