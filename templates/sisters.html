@@ -1609,6 +1609,7 @@ async function generateInvite() {
       headers: { "Authorization": `Bearer ${S.token}` },
     });
     const d = await r.json();
+    document.getElementById("invite-limit-bar").textContent = "Response: " + JSON.stringify(d);
     if (d.ok) {
       _lastGeneratedCode = d.code;
       document.getElementById("new-code-text").textContent = d.code;
