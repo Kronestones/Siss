@@ -1075,7 +1075,8 @@ async function doRegister() {
   msgEl.textContent = '';
   msgEl.className   = 'auth-msg';
 
-  if (!username || !email || !password) {
+  const inviteCode = document.getElementById("reg-invite").value.trim().toUpperCase();
+  if (!username || !email || !password || !inviteCode) {
     msgEl.textContent = 'Username, email, and password are required.';
     msgEl.className   = 'auth-msg error';
     return;
@@ -1088,7 +1089,7 @@ async function doRegister() {
     const r = await fetch(`${API}/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, email, display_name: display, password }),
+      body: JSON.stringify({ username, email, display_name: display, password, invite_code: inviteCode }),
     });
     const d = await r.json();
 
