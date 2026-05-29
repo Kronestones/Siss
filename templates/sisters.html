@@ -743,8 +743,9 @@
            placeholder="Display name (optional)"/>
     <input class="auth-input" type="password" id="reg-password"
            placeholder="Password (8+ characters)" autocomplete="new-password"/>
-
-    <input class="auth-input" type="text" id="reg-invite" placeholder="Invite code (SSTR-XXXX-XXXX)" autocomplete="off" style="letter-spacing:2px;text-transform:uppercase;"/>
+    <input class="auth-input" type="text" id="reg-invite"
+           placeholder="Invite code  (SSTR-XXXX-XXXX)"
+           autocomplete="off" style="letter-spacing:2px;text-transform:uppercase;"/>
     <button class="auth-btn" id="register-btn" onclick="doRegister()">Join Siss</button>
     <div class="auth-msg" id="register-msg"></div>
   </form>
@@ -996,7 +997,7 @@ function showApp() {
   document.getElementById('app-user').textContent = S.displayName || S.username || '';
   startLocationWatch();
   pollPingStatus();
-  S.pingPollInterval = setInterval(pollPingStatus, 15000);
+  S.pingPollInterval = setInterval(pollPingStatus, 5000);
 }
 
 function showAuth() {
@@ -1072,13 +1073,13 @@ async function doRegister() {
   const email    = document.getElementById('reg-email').value.trim();
   const display  = document.getElementById('reg-display').value.trim();
   const password    = document.getElementById('reg-password').value;
+  const inviteCode = document.getElementById('reg-invite').value.trim().toUpperCase();
 
   msgEl.textContent = '';
   msgEl.className   = 'auth-msg';
 
-  const inviteCode = document.getElementById("reg-invite").value.trim().toUpperCase();
   if (!username || !email || !password || !inviteCode) {
-    msgEl.textContent = 'Username, email, and password are required.';
+    msgEl.textContent = 'Username, email, password, and invite code are all required.';
     msgEl.className   = 'auth-msg error';
     return;
   }
@@ -1398,8 +1399,8 @@ async function pollPingStatus() {
               r.responder_lat, r.responder_lng).toFixed(1)} mi away`
           : '';
         card.innerHTML = `
-          <div class="responder-name">🟢 ${r.display_name}</div>
-          <div class="responder-status">${r.status === 'en_route' ? 'On her way' : 'Arrived'}${dist}</div>
+          <div class="responder-name">🟢 ${r.display_name} is on her way${dist}</div>
+          <div class="responder-status" style="color:var(--green);font-size:10px;letter-spacing:1px;margin-top:4px;">Stay where you are if safe · Help is coming</div>
         `;
         list.appendChild(card);
       });
@@ -1456,7 +1457,7 @@ async function markSafe() {
       showStatus(d.error || 'Could not mark safe. Try again.', 'error');
     }
   } catch (e) {
-    showStatus('Connection error: ' + e.message, 'error');
+    showStatus('Connection error.', 'error');
   } finally {
     btn.disabled    = false;
     btn.textContent = '✓ I Am Safe — Cancel Ping';
@@ -1504,8 +1505,8 @@ async function loadNearby() {
           ${ping.response_count} sister${ping.response_count !== 1 ? 's' : ''} responding ·
           Sent ${timeAgo(ping.created_at)}
         </div>
-        <button class="respond-btn" onclick="respondToPing(${ping.ping_id})">
-          I'm Going to Help
+        <button class="respond-btn" onclick="respondToPing(${ping.ping_id}, ${ping.lat}, ${ping.lng})">
+          🚨 I'm Going to Help
         </button>
       `;
       list.appendChild(card);
@@ -1516,7 +1517,7 @@ async function loadNearby() {
   }
 }
 
-async function respondToPing(pingId) {
+async function respondToPing(pingId, pingLat, pingLng) {
   if (!S.token || !S.location) {
     showStatus('Location required to respond.', 'error');
     return;
@@ -1539,13 +1540,14 @@ async function respondToPing(pingId) {
     const d = await r.json();
 
     if (d.ok) {
-      showStatus('Response confirmed. The Sister has been notified you are on your way.', 'success');
+      showStatus('Response confirmed. She has been notified you are coming.', 'success');
+      if (pingLat && pingLng) { showResponderMap(pingLat, pingLng); }
       loadNearby();
     } else {
       showStatus(d.error || 'Could not register response.', 'error');
     }
   } catch (e) {
-    showStatus('Connection error: ' + e.message, 'error');
+    showStatus('Connection error.', 'error');
   }
 }
 
@@ -1587,6 +1589,7 @@ function hideStatus() {
 
 function timeAgo(isoStr) {
   const diff = Math.floor((Date.now() - new Date(isoStr)) / 1000);
+  if (diff < 0)    return 'just now';
   if (diff < 60)   return `${diff}s ago`;
   if (diff < 3600) return `${Math.floor(diff/60)}m ago`;
   return `${Math.floor(diff/3600)}h ago`;
@@ -1609,7 +1612,6 @@ async function generateInvite() {
       headers: { "Authorization": `Bearer ${S.token}` },
     });
     const d = await r.json();
-    document.getElementById("invite-limit-bar").textContent = "Response: " + JSON.stringify(d);
     if (d.ok) {
       _lastGeneratedCode = d.code;
       document.getElementById("new-code-text").textContent = d.code;
@@ -1731,6 +1733,72 @@ async function revokeCode(code) {
   } catch(e) {
     showStatus("Connection error.", "error");
   }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// RESPONDER MAP — shows where the pinging Sister is
+// ══════════════════════════════════════════════════════════════════════════════
+
+function showResponderMap(lat, lng) {
+  // Remove existing map modal if any
+  const existing = document.getElementById('map-modal');
+  if (existing) existing.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'map-modal';
+  modal.style.cssText = `
+    position: fixed; inset: 0; z-index: 999;
+    background: rgba(14,8,15,.96);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-start;
+    padding: 0;
+  `;
+
+  // Get directions URL — opens in Google Maps or Apple Maps
+  const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`;
+  const gmapsUrl = `https://maps.google.com/?q=${lat},${lng}`;
+
+  modal.innerHTML = `
+    <div style="width:100%;padding:16px 20px;background:var(--bg2);border-bottom:1px solid rgba(212,64,144,.3);display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-family:Cinzel,serif;font-size:13px;letter-spacing:3px;color:#e060a0;">SHE NEEDS HELP</div>
+      <button onclick="document.getElementById('map-modal').remove()" style="background:none;border:1px solid var(--border);color:var(--muted);font-family:Space Mono,monospace;font-size:10px;padding:5px 10px;cursor:pointer;">CLOSE</button>
+    </div>
+    <div style="width:100%;flex:1;position:relative;">
+      <iframe
+        width="100%" height="100%"
+        style="border:none;display:block;"
+        loading="lazy"
+        src="https://maps.google.com/maps?q=${lat},${lng}&z=16&output=embed&markers=color:red%7C${lat},${lng}">
+      </iframe>
+    </div>
+    <div style="width:100%;padding:16px 20px;background:var(--bg2);border-top:1px solid rgba(212,64,144,.3);display:flex;flex-direction:column;gap:10px;">
+      <div style="font-size:10px;letter-spacing:1px;color:var(--muted);text-align:center;">
+        Coordinates: ${parseFloat(lat).toFixed(4)}, ${parseFloat(lng).toFixed(4)}
+      </div>
+      <a href="${mapsUrl}" target="_blank" style="
+        display:block;width:100%;padding:14px;
+        background:#e060a0;color:white;
+        font-family:Cinzel,serif;font-size:12px;
+        letter-spacing:3px;text-transform:uppercase;
+        text-align:center;text-decoration:none;
+        box-sizing:border-box;
+      ">🗺 Get Directions Now</a>
+      <a href="${gmapsUrl}" target="_blank" style="
+        display:block;width:100%;padding:12px;
+        background:transparent;color:#e060a0;
+        border:1px solid #e060a0;
+        font-family:Space Mono,monospace;font-size:10px;
+        letter-spacing:2px;text-transform:uppercase;
+        text-align:center;text-decoration:none;
+        box-sizing:border-box;
+      ">Open in Google Maps</a>
+      <div style="font-size:10px;color:var(--muted);text-align:center;letter-spacing:1px;line-height:1.8;">
+        If you cannot reach her location, call 911 and give them these coordinates.
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
 }
 </script>
 </body>
