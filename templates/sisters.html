@@ -1456,7 +1456,7 @@ async function markSafe() {
       showStatus(d.error || 'Could not mark safe. Try again.', 'error');
     }
   } catch (e) {
-    showStatus('Connection error.', 'error');
+    showStatus('Connection error: ' + e.message, 'error');
   } finally {
     btn.disabled    = false;
     btn.textContent = '✓ I Am Safe — Cancel Ping';
@@ -1545,7 +1545,7 @@ async function respondToPing(pingId) {
       showStatus(d.error || 'Could not register response.', 'error');
     }
   } catch (e) {
-    showStatus('Connection error.', 'error');
+    showStatus('Connection error: ' + e.message, 'error');
   }
 }
 
