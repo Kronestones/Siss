@@ -565,3 +565,41 @@ def admin_set_founder():
         return jsonify({"ok": False, "error": "username required."}), 400
     result = set_founder(username)
     return jsonify(result)
+
+
+# ── Invite Routes ─────────────────────────────────────────────────────────────
+
+@app.route("/sisters/api/invite/generate", methods=["POST"])
+@require_auth
+def invite_generate(sister):
+    from sisters_invites import generate_invite_code
+    result = generate_invite_code(sister.id)
+    return jsonify(result), (201 if result["ok"] else 429)
+
+
+@app.route("/sisters/api/invite/revoke", methods=["POST"])
+@require_auth
+def invite_revoke(sister):
+    from sisters_invites import revoke_invite_code
+    data = request.get_json(silent=True) or {}
+    code = clean_text(data.get("code", ""), 20).upper().strip()
+    if not code:
+        return jsonify({"ok": False, "error": "code required."}), 400
+    result = revoke_invite_code(code, sister.id)
+    return jsonify(result), (200 if result["ok"] else 400)
+
+
+@app.route("/sisters/api/invite/mine", methods=["GET"])
+@require_auth
+def invite_mine(sister):
+    from sisters_invites import get_my_codes
+    result = get_my_codes(sister.id)
+    return jsonify(result), (200 if result["ok"] else 500)
+
+
+@app.route("/sisters/api/invite/tree", methods=["GET"])
+@require_auth
+def invite_tree(sister):
+    from sisters_invites import get_my_invite_tree
+    result = get_my_invite_tree(sister.id)
+    return jsonify(result), (200 if result["ok"] else 500)
