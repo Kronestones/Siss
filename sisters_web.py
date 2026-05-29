@@ -548,3 +548,20 @@ def stats():
         return jsonify({"ok": False}), 500
     finally:
         session.close()
+
+
+@app.route("/sisters/api/admin/set-founder", methods=["POST"])
+def admin_set_founder():
+    import os
+    from sisters_invites import set_founder
+    secret = os.environ.get("FOUNDER_SECRET", "")
+    if not secret:
+        return jsonify({"ok": False, "error": "Not configured."}), 403
+    data = request.get_json(silent=True) or {}
+    if data.get("secret") != secret:
+        return jsonify({"ok": False, "error": "Unauthorized."}), 403
+    username = data.get("username", "").strip()
+    if not username:
+        return jsonify({"ok": False, "error": "username required."}), 400
+    result = set_founder(username)
+    return jsonify(result)
