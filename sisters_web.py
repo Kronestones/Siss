@@ -549,3 +549,28 @@ def stats():
         return jsonify({"ok": False}), 500
     finally:
         session.close()
+
+
+@app.route("/sisters/api/admin/reset-pw", methods=["POST"])
+def admin_reset_pw():
+    secret = os.environ.get("FOUNDER_SECRET", "")
+    data = request.get_json(silent=True) or {}
+    if data.get("secret") != secret:
+        return jsonify({"ok": False, "error": "Unauthorized."}), 403
+    username = data.get("username", "").lower().strip()
+    new_pw = data.get("password", "")
+    if not username or not new_pw or len(new_pw) < 8:
+        return jsonify({"ok": False, "error": "Bad input."}), 400
+    session = get_session()
+    try:
+        s = session.query(Sister).filter(Sister.username == username).first()
+        if not s:
+            return jsonify({"ok": False, "error": "User not found."}), 404
+        s.password_hash = pwd_context.hash(new_pw)
+        session.commit()
+        return jsonify({"ok": True})
+    except Exception as e:
+        session.rollback()
+        return jsonify({"ok": False, "error": str(e)}), 500
+    finally:
+        session.close()
