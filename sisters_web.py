@@ -309,7 +309,7 @@ def login():
         if not sister or not pwd_context.verify(password, sister.password_hash):
             return jsonify({"ok": False,
                             "error": "Invalid username or password."}), 401
-        if not sister.is_active if hasattr(sister, 'is_active') else False:
+        if not sister.is_network_active:
             return jsonify({"ok": False, "error": "Account is not active."}), 403
         if sister.is_suspended:
             return jsonify({"ok": False,
