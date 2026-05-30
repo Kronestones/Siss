@@ -918,8 +918,35 @@
       <div style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:12px;">Expires in 7 days · Single use</div>
       <button onclick="copyCode()" style="width:100%;padding:10px;background:transparent;border:1px solid var(--border);color:var(--text-dim);font-family:Space Mono,monospace;font-size:10px;letter-spacing:2px;cursor:pointer;">Copy Code</button>
     </div>
-    <div style="font-size:10px;letter-spacing:1px;color:var(--muted);line-height:1.8;padding:12px 14px;background:var(--bg2);border:1px solid var(--border);">
-      Every code you generate is linked to your account. If someone you invite misuses the network, you will be notified. You can revoke unused codes at any time.
+    <!-- Tap to expand invite rules -->
+    <div onclick="this.querySelector('.invite-rules-body').style.display=this.querySelector('.invite-rules-body').style.display==='none'?'block':'none';this.querySelector('.invite-rules-arrow').textContent=this.querySelector('.invite-rules-body').style.display==='none'?'▸':'▾';"
+         style="padding:12px 14px;background:var(--bg2);border:1px solid var(--border);cursor:pointer;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);">How Invites Work</span>
+        <span class="invite-rules-arrow" style="color:var(--gold);font-size:12px;">▸</span>
+      </div>
+      <div class="invite-rules-body" style="display:none;margin-top:12px;">
+        <div style="font-size:11px;line-height:2;color:var(--text-dim);letter-spacing:0.5px;">
+          <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border);">
+            <span style="color:var(--gold);">New members</span> — wait 24 hours after joining before generating your first code. This protects the network from bad actors creating throwaway accounts.
+          </div>
+          <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border);">
+            <span style="color:var(--gold);">Days 2–30</span> — 5 invite codes per day.
+          </div>
+          <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border);">
+            <span style="color:var(--gold);">After 30 days</span> — 10 invite codes per day. Daily limits reset at midnight UTC.
+          </div>
+          <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border);">
+            <span style="color:var(--gold);">Accountability</span> — every code is permanently linked to your account. If someone you invite misuses Siss — false pings, harassment, attempting to exploit the network — you will be notified and their unused codes are revoked immediately.
+          </div>
+          <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border);">
+            <span style="color:var(--gold);">Codes expire</span> — unused codes expire after 7 days. Each code is single use.
+          </div>
+          <div>
+            <span style="color:var(--gold);">Revoke anytime</span> — you can cancel any unused code before it is used. If you shared a code with someone you no longer trust, revoke it immediately.
+          </div>
+        </div>
+      </div>
     </div>
     <div style="font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-top:8px;border-top:1px solid var(--border);padding-top:16px;">Your Active Codes</div>
     <div id="my-codes-list" style="display:flex;flex-direction:column;gap:8px;"></div>
