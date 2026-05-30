@@ -302,8 +302,9 @@ def login():
 
     session = get_session()
     try:
-        sister = session.query(Sister).filter(
-            Sister.username == username).first()
+        sister = session.query(Sister).filter(Sister.username == username).first()
+        print(f"[Sisters] login: user={username} found={sister is not None} pw_len={len(password)}")
+        if sister: print(f"[Sisters] active={sister.is_network_active} suspended={sister.is_suspended}")
 
         if not sister or not pwd_context.verify(password, sister.password_hash):
             return jsonify({"ok": False,
