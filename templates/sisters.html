@@ -1025,6 +1025,7 @@ function showApp() {
   startLocationWatch();
   pollPingStatus();
   S.pingPollInterval = setInterval(pollPingStatus, 5000);
+  pollPingStatus();
 }
 
 function showAuth() {
